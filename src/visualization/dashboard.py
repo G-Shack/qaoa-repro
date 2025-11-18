@@ -63,9 +63,13 @@ def create_results_dashboard(
 
     ax = fig.add_subplot(gs[2, 2])
     ax.axis("off")
+    # Round only numeric columns to avoid numpy trying to coerce strings to floats
+    table_df = comparison_table.copy()
+    numeric_cols = table_df.select_dtypes(include=[np.number]).columns
+    table_df[numeric_cols] = table_df[numeric_cols].round(3)
     table = ax.table(
-        cellText=np.round(comparison_table.values, 3),
-        colLabels=comparison_table.columns,
+        cellText=table_df.values,
+        colLabels=table_df.columns,
         loc="center",
     )
     table.auto_set_font_size(False)
