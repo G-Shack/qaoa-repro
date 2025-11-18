@@ -5,7 +5,7 @@ from typing import Dict, Iterable
 
 from .circuits import CostHamiltonian
 from .experiments import ExperimentResult, run_depth_experiment
-from ..problems.knapsack import (
+from problems.knapsack import (
     KnapsackInstance,
     evaluate_knapsack_samples,
     knapsack_to_ising,

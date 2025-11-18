@@ -13,19 +13,16 @@ def plot_energy_distribution(
     comparison: Dict[float, float] | None = None,
     save_path: str | None = None,
 ) -> None:
-    energies = sorted(distribution)
-    primary = [distribution[e] for e in energies]
-    width = 0.35
+    energies = np.array(sorted(distribution))
+    primary = np.array([distribution[e] for e in energies])
+    width = 0.4 * np.min(np.diff(energies)) if len(energies) > 1 else 0.4
     fig, ax = plt.subplots(figsize=(8, 4))
-    x = np.arange(len(energies))
-    ax.bar(x - width / 2, primary, width=width, label="QAOA")
+    ax.bar(energies, primary, width=width, align="center", label="QAOA")
     if comparison:
-        comp = [comparison.get(e, 0.0) for e in energies]
-        ax.bar(x + width / 2, comp, width=width, label="Comparison")
-    if ground_energy in energies:
-        idx = energies.index(ground_energy)
-        ax.axvline(idx, color="red", linestyle="--", label="Ground Energy")
-    ax.set_xticks(x)
+        comp = np.array([comparison.get(float(e), 0.0) for e in energies])
+        ax.bar(energies, comp, width=width, align="center", alpha=0.6, label="Comparison")
+    ax.axvline(ground_energy, color="red", linestyle="--", label="Ground Energy")
+    ax.set_xticks(energies)
     ax.set_xticklabels([f"{e:.2f}" for e in energies], rotation=45)
     ax.set_ylabel("Probability")
     ax.set_title("Energy Distribution of Samples")
